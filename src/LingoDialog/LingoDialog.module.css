@@ -2,23 +2,3 @@
   max-width: 600px;
   width: 100%;
 }
-
-.sentence-to-translate {
-  display: inline-block;
-  border: 2px solid rgb(229, 229, 229);
-  border-radius: 15px;
-  padding: 6px 15px;
-}
-
-.read-aloud-button {
-  background-color: transparent;
-  border: none;
-  outline: none;
-  padding: 0;
-  vertical-align: middle;
-  margin-right: 12px;
-}
-
-.read-aloud-icon {
-  height: 23px;
-}

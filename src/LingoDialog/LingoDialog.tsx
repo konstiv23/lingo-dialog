@@ -1,23 +1,13 @@
 import { useState } from "react";
 import styles from "./LingoDialog.module.css";
-import soundIcon from "./soundIcon.svg";
 import WordButton from "../WordButton/WordButton";
+import SentenceToTranslate from "../SentenceToTranlate/SentenceToTranslate";
 
 export type DialogData = {
   sentenceToTranslate: string;
   candidateWords: string[];
   translation: string;
 };
-
-function readAloud(sentenceToTranslate: string) {
-  // Takes 15 seconds to speak for the first time after a page
-  // load on 2 out 3 android devices. Guess shouldn't be using this at all.
-  if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
-    const utterance = new SpeechSynthesisUtterance(sentenceToTranslate);
-    utterance.lang = "en-US";
-    speechSynthesis.speak(utterance);
-  }
-}
 
 function LingoDialog({ data }: { data: DialogData }) {
   const { sentenceToTranslate, candidateWords, translation } = data;
@@ -26,20 +16,7 @@ function LingoDialog({ data }: { data: DialogData }) {
     <main className={styles.app}>
       <div className={styles["guessing-container"]}>
         <h1>Введите перевод на русский</h1>
-
-        <p className={styles["sentence-to-translate"]}>
-          <button
-            className={styles["read-aloud-button"]}
-            onClick={() => readAloud(sentenceToTranslate)}
-          >
-            <img
-              className={styles["read-aloud-icon"]}
-              src={soundIcon}
-              alt="Read aloud button"
-            />{" "}
-          </button>
-          {sentenceToTranslate}
-        </p>
+        <SentenceToTranslate sentence={sentenceToTranslate} />
         <GuessedSentence
           candidateWords={candidateWords}
           guessedWordsIds={guessedWordsIds}
