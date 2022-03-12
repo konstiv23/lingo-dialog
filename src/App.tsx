@@ -15,7 +15,7 @@ const dialogData1 = {
 };
 
 function App() {
-  return <LingoDialog data={dialogData1} />;
+  return <LingoDialog {...dialogData1} />;
 }
 
 export default App;

@@ -1,32 +1,55 @@
-import { useState } from "react";
+import { Dispatch, useReducer, useState } from "react";
 import styles from "./LingoDialog.module.css";
 import WordButton from "../WordButton/WordButton";
 import SentenceToTranslate from "../SentenceToTranlate/SentenceToTranslate";
 
-export type DialogData = {
+export type DialogProps = {
   sentenceToTranslate: string;
   candidateWords: string[];
   translation: string;
 };
 
-function LingoDialog({ data }: { data: DialogData }) {
-  const { sentenceToTranslate, candidateWords, translation } = data;
-  const [guessedWordsIds, setGuessedWordsIds] = useState([1, 3]);
+type DialogState = DialogProps & {
+  guessedWordsIds: number[];
+};
+
+function reducer(
+  state: DialogState,
+  action: { type: string; payload: number }
+) {
+  switch (action.type) {
+    case "unguessed": {
+      const guessedWordsIds = state.guessedWordsIds.filter(
+        (i) => i !== action.payload
+      );
+      return { ...state, guessedWordsIds };
+    }
+    case "guessed": {
+      const guessedWordsIds = [...state.guessedWordsIds];
+      const wordIndex = action.payload;
+      if (guessedWordsIds.indexOf(wordIndex) !== -1) {
+        return state;
+      }
+      guessedWordsIds.push(wordIndex);
+      return { ...state, guessedWordsIds };
+    }
+    default:
+      throw new Error("unknown action type");
+  }
+}
+
+function LingoDialog(props: DialogProps) {
+  const [state, dispatch] = useReducer(reducer, {
+    ...props,
+    guessedWordsIds: [1, 3],
+  });
   return (
     <main className={styles.app}>
       <div className={styles["guessing-container"]}>
         <h1>Введите перевод на русский</h1>
-        <SentenceToTranslate sentence={sentenceToTranslate} />
-        <GuessedSentence
-          candidateWords={candidateWords}
-          guessedWordsIds={guessedWordsIds}
-          setGuessedWordsIds={setGuessedWordsIds}
-        />
-        <Candidates
-          candidateWords={candidateWords}
-          guessedWordsIds={guessedWordsIds}
-          setGuessedWordsIds={setGuessedWordsIds}
-        />
+        <SentenceToTranslate sentence={state.sentenceToTranslate} />
+        <GuessedSentence {...state} dispatch={dispatch} />
+        <Candidates {...state} dispatch={dispatch} />
       </div>
     </main>
   );
@@ -35,13 +58,13 @@ function LingoDialog({ data }: { data: DialogData }) {
 type WordsParameters = {
   candidateWords: string[];
   guessedWordsIds: number[];
-  setGuessedWordsIds: React.Dispatch<React.SetStateAction<number[]>>;
+  dispatch: Dispatch<{ type: string; payload: number }>;
 };
 
 function GuessedSentence({
   candidateWords,
   guessedWordsIds,
-  setGuessedWordsIds,
+  dispatch,
 }: WordsParameters) {
   return (
     <section>
@@ -50,7 +73,7 @@ function GuessedSentence({
           text={candidateWords[wordIndex]}
           key={wordIndex}
           onClick={() => {
-            setGuessedWordsIds(guessedWordsIds.filter((i) => i !== wordIndex));
+            dispatch({ type: "unguessed", payload: wordIndex });
           }}
         />
       ))}
@@ -61,23 +84,18 @@ function GuessedSentence({
 function Candidates({
   candidateWords,
   guessedWordsIds,
-  setGuessedWordsIds,
+  dispatch,
 }: WordsParameters) {
   return (
     <section>
-      {candidateWords.map((word, index) => (
+      {candidateWords.map((word, wordIndex) => (
         <WordButton
           text={word}
-          key={index}
+          key={wordIndex}
           onClick={() => {
-            const newGuessedWordIds = [...guessedWordsIds];
-            if (newGuessedWordIds.indexOf(index) !== -1) {
-              return;
-            }
-            newGuessedWordIds.push(index);
-            setGuessedWordsIds(newGuessedWordIds);
+            dispatch({ type: "guessed", payload: wordIndex });
           }}
-          disabled={guessedWordsIds.indexOf(index) !== -1}
+          disabled={guessedWordsIds.indexOf(wordIndex) !== -1}
         />
       ))}
     </section>
