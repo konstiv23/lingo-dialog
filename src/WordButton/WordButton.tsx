@@ -6,16 +6,19 @@ export default function WordButton({
   disabled = false,
 }: {
   text: string;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
 }) {
+  // Without div wrapper animation doesn't work correctly on Windows.
   return (
-    <button
-      className={styles["lingo-button"]}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      {text}
-    </button>
+    <div>
+      <button
+        className={styles["word-button"]}
+        onClick={onClick}
+        disabled={disabled}
+      >
+        {text}
+      </button>
+    </div>
   );
 }
