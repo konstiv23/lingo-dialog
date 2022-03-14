@@ -120,13 +120,15 @@ function GuessedSentence({
   return (
     <section ref={containerRef} style={{ display: "flex" }}>
       {guessedWordsIds.map((wordIndex) => (
-        <WordButton
-          text={candidateWords[wordIndex]}
-          key={wordIndex}
-          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-            dispatch({ type: "unguessed", payload: { wordIndex, event } });
-          }}
-        />
+        <div className={styles["guessed-word-wrapper"]}>
+          <WordButton
+            text={candidateWords[wordIndex]}
+            key={wordIndex}
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+              dispatch({ type: "unguessed", payload: { wordIndex, event } });
+            }}
+          />
+        </div>
       ))}
     </section>
   );
