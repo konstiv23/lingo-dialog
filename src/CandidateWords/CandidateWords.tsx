@@ -44,7 +44,7 @@ export default function CandidateWords(props: {
       type: "candidates-coord",
       payload: { candidatesCoord: coords, wordIndex: 0 },
     });
-  }, []);
+  }, [document.body.clientWidth, document.body.clientHeight]);
 
   // disabledArray management
   const [disabledArray, dispatch] = useReducer(
