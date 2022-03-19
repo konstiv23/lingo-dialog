@@ -1,0 +1,14 @@
+.guessed-word-wrapper {
+  visibility: hidden;
+  animation: pop-in 0.38s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes pop-in {
+  99.99% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
