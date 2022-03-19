@@ -1,8 +1,16 @@
-import { Dispatch, useEffect, useReducer, useRef } from "react";
+import {
+  Dispatch,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import styles from "./LingoDialog.module.css";
 import WordButton from "../WordButton/WordButton";
 import SentenceToTranslate from "../SentenceToTranlate/SentenceToTranslate";
 import WordButtonAnimation from "../WordButtonAnimation/WordButtonAnimation";
+import { wordAnimationDurationS } from "../constants";
 
 export type DialogProps = {
   sentenceToTranslate: string;
@@ -15,6 +23,7 @@ type DialogState = DialogProps & {
   lastGuessed?: { wordIndex: number; coordFrom: DOMRect; coordTo?: DOMRect };
   lastUnguessed?: { wordIndex: number; coordFrom: DOMRect };
   candidatesCoord?: DOMRect[];
+  unguessedTimestamps: { [wordIndex: string]: Date };
 };
 
 type Payload = {
@@ -39,17 +48,22 @@ function reducer(
 ): DialogState {
   switch (action.type) {
     case "unguessed": {
+      const wordIndex = action.payload.wordIndex;
       const guessedWordsIds = state.guessedWordsIds.filter(
-        (i) => i !== action.payload.wordIndex
+        (i) => i !== wordIndex
       );
       return {
         ...state,
         guessedWordsIds,
         lastUnguessed: {
-          wordIndex: action.payload.wordIndex,
+          wordIndex,
           coordFrom: eventToDOMRect(action.payload.event),
         },
         lastGuessed: undefined,
+        unguessedTimestamps: {
+          ...state.unguessedTimestamps,
+          [wordIndex]: new Date(),
+        },
       };
     }
     case "guessed": {
@@ -89,6 +103,7 @@ function LingoDialog(props: DialogProps) {
   const [state, dispatch] = useReducer(reducer, {
     ...props,
     guessedWordsIds: [1, 3],
+    unguessedTimestamps: {},
   });
   return (
     <main className={styles.app}>
@@ -97,17 +112,18 @@ function LingoDialog(props: DialogProps) {
         <SentenceToTranslate sentence={state.sentenceToTranslate} />
         <GuessedSentence {...state} dispatch={dispatch} />
         <Candidates {...state} dispatch={dispatch} />
+
         <WordButtonAnimation
           word={state.candidateWords[state?.lastGuessed?.wordIndex || 0]}
           from={state.lastGuessed?.coordFrom}
           to={state.lastGuessed?.coordTo}
-          key={state.lastGuessed?.wordIndex}
+          key={"guessed" + state.lastGuessed?.wordIndex}
         />
         <WordButtonAnimation
           word={state.candidateWords[state?.lastUnguessed?.wordIndex || 0]}
           from={state.lastUnguessed?.coordFrom}
           to={state.candidatesCoord?.[state?.lastUnguessed?.wordIndex || 0]}
-          key={(state.lastGuessed?.wordIndex || 999) + 100}
+          key={"unguessed" + state.lastUnguessed?.wordIndex}
         />
       </div>
     </main>
@@ -118,6 +134,7 @@ type WordsParameters = {
   candidateWords: string[];
   guessedWordsIds: number[];
   dispatch: Dispatch<{ type: string; payload: Payload }>;
+  unguessedTimestamps: { [wordIndex: string]: Date };
 };
 
 function GuessedSentence({
@@ -126,6 +143,7 @@ function GuessedSentence({
   dispatch,
 }: WordsParameters) {
   const containerRef = useRef<HTMLButtonElement>(null);
+  // Dispatching coordinates of latest guessed word
   useEffect(() => {
     if (!containerRef || !containerRef.current) {
       return;
@@ -161,9 +179,11 @@ function Candidates({
   candidateWords,
   guessedWordsIds,
   dispatch,
+  unguessedTimestamps,
 }: WordsParameters) {
   const candidatesRef = useRef<HTMLElement>(null);
 
+  // dispatching coordinates of all candidate words
   useEffect(() => {
     if (!candidatesRef || !candidatesRef.current) {
       return;
@@ -179,6 +199,32 @@ function Candidates({
     });
   }, []);
 
+  const [disabledArray, setDisabledArray] = useState(() =>
+    candidateWords.map(() => false)
+  );
+  // disabledArray management
+  useEffect(() => {
+    const newDisabled = [];
+    for (let i = 0; i < candidateWords.length; i++) {
+      if (guessedWordsIds.indexOf(i) !== -1) {
+        newDisabled.push(true);
+        continue;
+      }
+      const recentyUngessed =
+        new Date().getTime() - unguessedTimestamps[i]?.getTime() <
+        wordAnimationDurationS * 1000;
+      newDisabled.push(recentyUngessed);
+      if (recentyUngessed) {
+        setTimeout(() => {
+          let modDisabled = [...disabledArray];
+          modDisabled[i] = false;
+          setDisabledArray(modDisabled);
+        }, wordAnimationDurationS * 1000);
+      }
+    }
+    setDisabledArray(newDisabled);
+  }, [unguessedTimestamps, guessedWordsIds]);
+
   return (
     <section style={{ display: "flex" }} ref={candidatesRef}>
       {candidateWords.map((word, wordIndex) => (
@@ -191,7 +237,7 @@ function Candidates({
               payload: { wordIndex, event },
             });
           }}
-          disabled={guessedWordsIds.indexOf(wordIndex) !== -1}
+          disabled={disabledArray[wordIndex]}
         />
       ))}
     </section>
