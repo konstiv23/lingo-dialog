@@ -2,6 +2,7 @@ import { Dispatch, useEffect, useRef, useState } from "react";
 import { wordAnimationDurationS } from "../constants";
 import { LingoPayload } from "../LingoDialog/LingoReducer";
 import WordButton from "../WordButton/WordButton";
+import styles from "./CandidateWords.module.css";
 
 export default function CandidateWords(props: {
   candidateWords: string[];
@@ -55,7 +56,7 @@ export default function CandidateWords(props: {
   }, [props.unguessedTimestamps, props.guessedWordsIds]);
 
   return (
-    <section style={{ display: "flex" }} ref={candidatesRef}>
+    <section className={styles["candidate-words"]} ref={candidatesRef}>
       {props.candidateWords.map((word, wordIndex) => (
         <WordButton
           text={word}

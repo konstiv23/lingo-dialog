@@ -26,20 +26,28 @@ export default function GuessedSentence(props: {
   }, [props.guessedWordsIds]);
 
   return (
-    <section ref={containerRef} style={{ display: "flex" }}>
-      {props.guessedWordsIds.map((wordIndex) => (
-        <div className={styles["guessed-word-wrapper"]} key={wordIndex}>
-          <WordButton
-            text={props.candidateWords[wordIndex]}
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-              props.dispatch({
-                type: "unguessed",
-                payload: { wordIndex, event },
-              });
-            }}
-          />
-        </div>
-      ))}
-    </section>
+    <div className={styles["guessed-sentence-container"]}>
+      <section ref={containerRef} className={styles["guessed-sentence"]}>
+        {props.guessedWordsIds.map((wordIndex) => (
+          <div className={styles["guessed-word-wrapper"]} key={wordIndex}>
+            <WordButton
+              text={props.candidateWords[wordIndex]}
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                props.dispatch({
+                  type: "unguessed",
+                  payload: { wordIndex, event },
+                });
+              }}
+            />
+          </div>
+        ))}
+      </section>
+      <div className={styles["horizontal-dividers"]}>
+        <hr />
+        <hr />
+        <hr />
+        <hr />
+      </div>
+    </div>
   );
 }
