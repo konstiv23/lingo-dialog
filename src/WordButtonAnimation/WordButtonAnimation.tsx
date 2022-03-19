@@ -5,8 +5,6 @@ import WordButton from "../WordButton/WordButton";
 function wordStyle(from: DOMRect, to: DOMRect, animationPhase: number) {
   return {
     position: "absolute" as const,
-    color: "red",
-    margin: "0px",
     visibility:
       animationPhase === 0 ? ("visible" as const) : ("hidden" as const),
     left: animationPhase === 0 ? from.left : to.left,

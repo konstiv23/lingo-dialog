@@ -1,0 +1,30 @@
+:root {
+  --gray-main: #e5e5e5;
+  --height: 46px;
+}
+
+.word-button {
+  height: var(--height);
+  padding: 0 16px;
+  background-color: white;
+  color: rgb(75, 75, 75);
+  border: 2px solid var(--gray-main);
+  border-bottom-width: 4px;
+  border-radius: 16px;
+  font-size: 19px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.word-button:disabled {
+  background-color: var(--gray-main);
+  color: var(--gray-main);
+  cursor: auto;
+}
+
+.word-button:active {
+  height: calc(var(--height) - 2px);
+  margin-top: 2px;
+  border-bottom-width: 2px;
+}
