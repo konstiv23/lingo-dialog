@@ -13,13 +13,21 @@ export type DialogProps = {
 type DialogState = DialogProps & {
   guessedWordsIds: number[];
   lastGuessed?: { wordIndex: number; coordFrom: DOMRect; coordTo?: DOMRect };
+  lastUnguessed?: { wordIndex: number; coordFrom: DOMRect };
+  candidatesCoord?: DOMRect[];
 };
 
 type Payload = {
   wordIndex: number;
   event?: React.MouseEvent<HTMLButtonElement>;
   coordTo?: DOMRect;
+  candidatesCoord?: DOMRect[];
 };
+
+function eventToDOMRect(event?: React.MouseEvent<HTMLButtonElement>) {
+  if (!event) return { left: 0, top: 0 } as DOMRect;
+  return (event.target as HTMLElement).getBoundingClientRect();
+}
 
 // I know, this is very ugly. Will use Redux Toolkit next time.
 function reducer(
@@ -34,7 +42,15 @@ function reducer(
       const guessedWordsIds = state.guessedWordsIds.filter(
         (i) => i !== action.payload.wordIndex
       );
-      return { ...state, guessedWordsIds, lastGuessed: undefined };
+      return {
+        ...state,
+        guessedWordsIds,
+        lastUnguessed: {
+          wordIndex: action.payload.wordIndex,
+          coordFrom: eventToDOMRect(action.payload.event),
+        },
+        lastGuessed: undefined,
+      };
     }
     case "guessed": {
       const guessedWordsIds = [...state.guessedWordsIds];
@@ -48,10 +64,9 @@ function reducer(
         guessedWordsIds,
         lastGuessed: {
           wordIndex: action.payload.wordIndex,
-          coordFrom: (
-            action.payload.event?.target as HTMLElement
-          ).getBoundingClientRect(),
+          coordFrom: eventToDOMRect(action.payload.event),
         },
+        lastUnguessed: undefined,
       };
     }
     case "last-guessed-word-coord": {
@@ -62,6 +77,9 @@ function reducer(
         ...state,
         lastGuessed: { ...state.lastGuessed, coordTo: action.payload.coordTo },
       };
+    }
+    case "candidates-coord": {
+      return { ...state, candidatesCoord: action.payload.candidatesCoord };
     }
     default:
       throw new Error("unknown action type");
@@ -84,6 +102,12 @@ function LingoDialog(props: DialogProps) {
           from={state.lastGuessed?.coordFrom}
           to={state.lastGuessed?.coordTo}
           key={state.lastGuessed?.wordIndex}
+        />
+        <WordButtonAnimation
+          word={state.candidateWords[state?.lastUnguessed?.wordIndex || 0]}
+          from={state.lastUnguessed?.coordFrom}
+          to={state.candidatesCoord?.[state?.lastUnguessed?.wordIndex || 0]}
+          key={(state.lastGuessed?.wordIndex || 999) + 100}
         />
       </div>
     </main>
@@ -120,10 +144,9 @@ function GuessedSentence({
   return (
     <section ref={containerRef} style={{ display: "flex" }}>
       {guessedWordsIds.map((wordIndex) => (
-        <div className={styles["guessed-word-wrapper"]}>
+        <div className={styles["guessed-word-wrapper"]} key={wordIndex}>
           <WordButton
             text={candidateWords[wordIndex]}
-            key={wordIndex}
             onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
               dispatch({ type: "unguessed", payload: { wordIndex, event } });
             }}
@@ -139,8 +162,25 @@ function Candidates({
   guessedWordsIds,
   dispatch,
 }: WordsParameters) {
+  const candidatesRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!candidatesRef || !candidatesRef.current) {
+      return;
+    }
+    const children = candidatesRef.current.children;
+    const coords = [];
+    for (let i = 0; i < children.length; i++) {
+      coords.push(children[i].getBoundingClientRect());
+    }
+    dispatch({
+      type: "candidates-coord",
+      payload: { candidatesCoord: coords, wordIndex: 0 },
+    });
+  }, []);
+
   return (
-    <section style={{ display: "flex" }}>
+    <section style={{ display: "flex" }} ref={candidatesRef}>
       {candidateWords.map((word, wordIndex) => (
         <WordButton
           text={word}
