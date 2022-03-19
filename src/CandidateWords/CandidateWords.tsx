@@ -1,8 +1,23 @@
-import { Dispatch, useEffect, useRef, useState } from "react";
+import { Dispatch, useCallback, useEffect, useReducer, useRef } from "react";
 import { wordAnimationDurationS } from "../constants";
 import { LingoPayload } from "../LingoDialog/LingoReducer";
 import WordButton from "../WordButton/WordButton";
 import styles from "./CandidateWords.module.css";
+
+function disabledReducer(
+  state: boolean[],
+  action: { type: string; payload: { wordIndex: number; isDisabled: boolean } }
+) {
+  switch (action.type) {
+    case "set-at-index": {
+      const newState = [...state];
+      newState[action.payload.wordIndex] = action.payload.isDisabled;
+      return newState;
+    }
+    default:
+      throw new Error("unknown action type");
+  }
+}
 
 export default function CandidateWords(props: {
   candidateWords: string[];
@@ -28,31 +43,35 @@ export default function CandidateWords(props: {
     });
   }, []);
 
-  const [disabledArray, setDisabledArray] = useState(() =>
+  // disabledArray management
+  const [disabledArray, dispatch] = useReducer(
+    disabledReducer,
     props.candidateWords.map(() => false)
   );
 
-  // disabledArray management
+  const setDisabled = useCallback((wordIndex: number, isDisabled: boolean) => {
+    dispatch({
+      type: "set-at-index",
+      payload: { wordIndex, isDisabled },
+    });
+  }, []);
+
   useEffect(() => {
-    const newDisabled = [];
     for (let i = 0; i < props.candidateWords.length; i++) {
       if (props.guessedWordsIds.indexOf(i) !== -1) {
-        newDisabled.push(true);
+        setDisabled(i, true);
         continue;
       }
       const recentyUngessed =
         new Date().getTime() - props.unguessedTimestamps[i]?.getTime() <
         wordAnimationDurationS * 1000;
-      newDisabled.push(recentyUngessed);
+      setDisabled(i, recentyUngessed);
       if (recentyUngessed) {
         setTimeout(() => {
-          let modDisabled = [...disabledArray];
-          modDisabled[i] = false;
-          setDisabledArray(modDisabled);
+          setDisabled(i, false);
         }, wordAnimationDurationS * 1000);
       }
     }
-    setDisabledArray(newDisabled);
   }, [props.unguessedTimestamps, props.guessedWordsIds]);
 
   return (
