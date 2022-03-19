@@ -18,9 +18,9 @@ const dialogData1 = {
 
 function App() {
   return (
-    <div className={styles["app"]}>
+    <main className={styles["app"]}>
       <LingoDialog {...dialogData1} />
-    </div>
+    </main>
   );
 }
 

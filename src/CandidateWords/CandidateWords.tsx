@@ -1,6 +1,7 @@
 import { Dispatch, useCallback, useEffect, useReducer, useRef } from "react";
 import { wordAnimationDurationS } from "../constants";
 import { LingoPayload } from "../LingoDialog/LingoReducer";
+import boundingRectRelativeToDoc from "../utils/boundingRectRelativeToDoc";
 import WordButton from "../WordButton/WordButton";
 import styles from "./CandidateWords.module.css";
 
@@ -35,7 +36,9 @@ export default function CandidateWords(props: {
     const children = candidatesRef.current.children;
     const coords = [];
     for (let i = 0; i < children.length; i++) {
-      coords.push(children[i].getBoundingClientRect());
+      coords.push(
+        boundingRectRelativeToDoc(children[i].getBoundingClientRect())
+      );
     }
     props.dispatch({
       type: "candidates-coord",

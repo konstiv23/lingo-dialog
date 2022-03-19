@@ -1,8 +1,11 @@
+import boundingRectRelativeToDoc from "../utils/boundingRectRelativeToDoc";
 import { DialogState } from "./LingoDialog";
 
 function eventToDOMRect(event?: React.MouseEvent<HTMLButtonElement>) {
   if (!event) return { left: 0, top: 0 } as DOMRect;
-  return (event.target as HTMLElement).getBoundingClientRect();
+  return boundingRectRelativeToDoc(
+    (event.target as HTMLElement).getBoundingClientRect()
+  );
 }
 
 export type LingoPayload = {

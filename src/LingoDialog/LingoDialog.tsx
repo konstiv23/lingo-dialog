@@ -27,7 +27,7 @@ export default function LingoDialog(props: DialogProps) {
     unguessedTimestamps: {},
   });
   return (
-    <main className={styles.app}>
+    <div className={styles.app}>
       <div className={styles["guessing-container"]}>
         <h1>Введите перевод на русский</h1>
         <SentenceToTranslate sentence={state.sentenceToTranslate} />
@@ -47,6 +47,6 @@ export default function LingoDialog(props: DialogProps) {
           key={"unguessed" + state.lastUnguessed?.wordIndex}
         />
       </div>
-    </main>
+    </div>
   );
 }

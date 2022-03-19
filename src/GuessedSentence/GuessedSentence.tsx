@@ -1,5 +1,6 @@
 import { Dispatch, useEffect, useRef } from "react";
 import { LingoPayload } from "../LingoDialog/LingoReducer";
+import boundingRectRelativeToDoc from "../utils/boundingRectRelativeToDoc";
 import WordButton from "../WordButton/WordButton";
 import styles from "./GuessedSentence.module.css";
 
@@ -19,7 +20,7 @@ export default function GuessedSentence(props: {
     props.dispatch({
       type: "last-guessed-word-coord",
       payload: {
-        coordTo: lastButton.getBoundingClientRect(),
+        coordTo: boundingRectRelativeToDoc(lastButton.getBoundingClientRect()),
         wordIndex: props.guessedWordsIds[props.guessedWordsIds.length - 1],
       },
     });
