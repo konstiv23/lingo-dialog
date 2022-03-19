@@ -3,28 +3,13 @@
 }
 
 .guessed-sentence {
-  height: 120px;
+  height: 180px;
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 34px;
   padding-top: 6px;
   align-content: flex-start;
   gap: 8px;
-}
-
-.horizontal-dividers {
-  height: 64px;
-  overflow: hidden;
-  height: 130px;
-}
-
-@media (max-width: 370px) {
-  .guessed-sentence {
-    height: 180px;
-  }
-  .horizontal-dividers {
-    min-height: 190px;
-  }
 }
 
 .guessed-word-wrapper {
@@ -43,6 +28,7 @@
 }
 
 .horizontal-dividers {
+  height: 190px;
   position: absolute;
   top: 0;
   width: 100%;
