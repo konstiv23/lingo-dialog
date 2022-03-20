@@ -3,7 +3,7 @@
 }
 
 .guessed-sentence {
-  height: 180px;
+  height: 120px;
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 34px;
@@ -28,7 +28,7 @@
 }
 
 .horizontal-dividers {
-  height: 190px;
+  height: 130px;
   position: absolute;
   top: 0;
   width: 100%;
@@ -44,6 +44,15 @@
   border: none;
   border-bottom: 2px solid #e5e5e5;
   margin: 0;
+}
+
+@media (max-width: 650px) {
+  .guessed-sentence {
+    height: 180px;
+  }
+  .horizontal-dividers {
+    height: 190px;
+  }
 }
 
 @media (max-width: 380px) {
