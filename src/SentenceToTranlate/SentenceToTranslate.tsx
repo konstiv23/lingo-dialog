@@ -8,6 +8,10 @@ function readAloud(sentenceToTranslate: string) {
   if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
     const utterance = new SpeechSynthesisUtterance(sentenceToTranslate);
     utterance.lang = "en-US";
+    var voices = window.speechSynthesis.getVoices();
+    utterance.voice = voices.filter(function (voice) {
+      return voice.name.match(/[^e]male/i);
+    })[0];
     speechSynthesis.speak(utterance);
   }
 }
