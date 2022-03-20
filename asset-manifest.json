@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/lingo-dialog/static/css/main.9e897c84.css",
+    "main.js": "/lingo-dialog/static/js/main.95c518ac.js",
+    "static/js/787.183f82e1.chunk.js": "/lingo-dialog/static/js/787.183f82e1.chunk.js",
+    "static/media/superhero-g5bad58971_640.png": "/lingo-dialog/static/media/superhero-g5bad58971_640.6ec9be725efd576a68d0.png",
+    "static/media/soundIcon.svg": "/lingo-dialog/static/media/soundIcon.c50019c1e4bd5b2b0e0f437c051fcf3d.svg",
+    "index.html": "/lingo-dialog/index.html",
+    "main.9e897c84.css.map": "/lingo-dialog/static/css/main.9e897c84.css.map",
+    "main.95c518ac.js.map": "/lingo-dialog/static/js/main.95c518ac.js.map",
+    "787.183f82e1.chunk.js.map": "/lingo-dialog/static/js/787.183f82e1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9e897c84.css",
+    "static/js/main.95c518ac.js"
+  ]
+}
