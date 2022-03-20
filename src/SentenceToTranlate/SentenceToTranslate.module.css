@@ -1,8 +1,37 @@
+:root {
+  --border-color: rgb(229, 229, 229);
+}
+
+.sentence-and-cartoon {
+  display: flex;
+  margin-bottom: -1px;
+  gap: 20px;
+}
+
+.cartoon-wrapper {
+  max-width: 114px;
+  aspect-ratio: 401 / 640;
+  width: 30%;
+  overflow: hidden;
+  align-self: flex-end;
+}
+
+.cartoon {
+  width: 100%;
+  padding-top: 25%;
+  object-fit: contain;
+  align-self: flex-end;
+}
+
 .sentence-to-translate {
   display: inline-block;
-  border: 2px solid rgb(229, 229, 229);
+  border: 2px solid var(--border-color);
+  font-size: 19px;
+  line-height: 39px;
   border-radius: 15px;
-  padding: 6px 15px;
+  padding: 12px 24px;
+  align-self: center;
+  position: relative;
 }
 
 .read-aloud-button {
@@ -16,4 +45,18 @@
 
 .read-aloud-icon {
   height: 23px;
+}
+
+.triangle-pointer {
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  position: absolute;
+  left: -7px;
+  transform: rotate(45deg);
+  border: 2px solid var(--border-color);
+  border-radius: 2px;
+  border-right: none;
+  border-top: none;
+  top: calc(50% - 10px / 2);
 }

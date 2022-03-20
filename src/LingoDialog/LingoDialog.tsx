@@ -29,7 +29,9 @@ export default function LingoDialog(props: DialogProps) {
   return (
     <div className={styles.app}>
       <div className={styles["guessing-container"]}>
-        <h1>Введите перевод на русский</h1>
+        <h1 className={styles["enter-translation"]}>
+          Введите перевод на русский
+        </h1>
         <SentenceToTranslate sentence={state.sentenceToTranslate} />
         <GuessedSentence {...state} dispatch={dispatch} />
         <CandidateWords {...state} dispatch={dispatch} />
