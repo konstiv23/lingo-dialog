@@ -24,7 +24,7 @@ export type DialogState = DialogProps & {
 export default function LingoDialog(props: DialogProps) {
   const [state, dispatch] = useReducer(lingoReducer, {
     ...props,
-    guessedWordsIds: [1, 3],
+    guessedWordsIds: [],
     unguessedTimestamps: {},
   });
   return (
