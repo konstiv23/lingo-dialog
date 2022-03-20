@@ -45,3 +45,12 @@
   border-bottom: 2px solid #e5e5e5;
   margin: 0;
 }
+
+@media (max-width: 380px) {
+  .horizontal-dividers {
+    gap: 46px;
+  }
+  .guessed-sentence {
+    height: 138px;
+  }
+}

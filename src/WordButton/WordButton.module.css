@@ -1,6 +1,7 @@
 :root {
   --wb-gray-main: #e5e5e5;
   --wb-height: 52px;
+  --wb-phone-height: 40px;
 }
 
 .word-button {
@@ -27,4 +28,15 @@
   height: calc(var(--wb-height) - 2px);
   margin-top: 2px;
   border-bottom-width: 2px;
+}
+
+@media (max-width: 380px) {
+  .word-button {
+    height: var(--wb-phone-height);
+    font-size: 17px;
+    padding: 0 8px;
+  }
+  .word-button:active {
+    height: calc(var(--wb-phone-height) - 2px);
+  }
 }

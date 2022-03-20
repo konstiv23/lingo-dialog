@@ -60,3 +60,9 @@
   border-top: none;
   top: calc(50% - 10px / 2);
 }
+
+@media (max-width: 380px) {
+  .sentence-to-translate {
+    padding: 6px 12px;
+  }
+}

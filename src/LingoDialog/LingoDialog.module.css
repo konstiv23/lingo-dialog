@@ -16,3 +16,11 @@
   font-size: 32px;
   margin-top: 0;
 }
+
+@media (max-width: 380px) {
+  .enter-translation {
+    font-size: 25px;
+    line-height: 31px;
+    margin-bottom: 0;
+  }
+}
