@@ -1,14 +1,14 @@
 :root {
-  --gray-main: #e5e5e5;
-  --height: 52px;
+  --wb-gray-main: #e5e5e5;
+  --wb-height: 52px;
 }
 
 .word-button {
-  height: var(--height);
+  height: var(--wb-height);
   padding: 0 16px;
   background-color: white;
   color: rgb(75, 75, 75);
-  border: 2px solid var(--gray-main);
+  border: 2px solid var(--wb-gray-main);
   border-bottom-width: 4px;
   border-radius: 16px;
   font-size: 19px;
@@ -18,13 +18,13 @@
 }
 
 .word-button:disabled {
-  background-color: var(--gray-main);
-  color: var(--gray-main);
+  background-color: var(--wb-gray-main);
+  color: var(--wb-gray-main);
   cursor: auto;
 }
 
 .word-button:active {
-  height: calc(var(--height) - 2px);
+  height: calc(var(--wb-height) - 2px);
   margin-top: 2px;
   border-bottom-width: 2px;
 }

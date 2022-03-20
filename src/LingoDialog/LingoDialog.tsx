@@ -5,6 +5,7 @@ import WordButtonAnimation from "../WordButtonAnimation/WordButtonAnimation";
 import lingoReducer from "./LingoReducer";
 import GuessedSentence from "../GuessedSentence/GuessedSentence";
 import CandidateWords from "../CandidateWords/CandidateWords";
+import CheckOrSkip from "../CheckOrSkip/CheckOrSkip";
 
 export type DialogProps = {
   sentenceToTranslate: string;
@@ -27,7 +28,7 @@ export default function LingoDialog(props: DialogProps) {
     unguessedTimestamps: {},
   });
   return (
-    <div className={styles.app}>
+    <div className={styles["lingo-dialog"]}>
       <div className={styles["guessing-container"]}>
         <h1 className={styles["enter-translation"]}>
           Введите перевод на русский
@@ -49,6 +50,7 @@ export default function LingoDialog(props: DialogProps) {
           key={"unguessed" + state.lastUnguessed?.wordIndex}
         />
       </div>
+      <CheckOrSkip haveAGuess={state.guessedWordsIds.length > 0} />
     </div>
   );
 }
